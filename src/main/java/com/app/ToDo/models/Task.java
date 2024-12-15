@@ -12,9 +12,15 @@ public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     public Long id;
-    public  String title;
+    public String title;
+
+    @Column(nullable = false)
     public String description;
+
     public boolean completed;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
 
     public void setDescription(String description) {

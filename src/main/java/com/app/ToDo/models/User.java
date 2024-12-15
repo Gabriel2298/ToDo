@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -21,7 +22,13 @@ public class User {
     private Integer age;
     private Date dateOfBirth;
     private LocalDate registrationDate;
+    @Column(unique = true)
     private String email;
+    @Column(unique = true)
     private String userName;
+    @Column
     private String password;
+
+    @OneToMany(mappedBy = "user")
+    private List<Task> task;
 }
