@@ -11,10 +11,11 @@ import lombok.*;
 public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-    private String title;
-    private boolean completed;
-    private String description;
+    public Long id;
+    public  String title;
+    public String description;
+    public boolean completed;
+
 
     public void setDescription(String description) {
         this.description = description;
