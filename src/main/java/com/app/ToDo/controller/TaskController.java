@@ -2,6 +2,7 @@ package com.app.ToDo.controller;
 
 import com.app.ToDo.models.Task;
 import com.app.ToDo.service.TaskService;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -9,8 +10,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Controller
-@
 public class TaskController {
+
     private final TaskService taskService;
 
     public TaskController(TaskService taskService) {
@@ -18,7 +19,7 @@ public class TaskController {
     }
 
     @GetMapping
-    public String getTasks(Model model) {
+    public String getTasks(@NotNull Model model) {
         List<Task> tasks = taskService.getAllTasks();
         model.addAttribute("tasks", tasks);
         return "tasks";
@@ -30,7 +31,7 @@ public class TaskController {
         return "redirect:/";
     }
 
-    @GetMapping("/{id}/delete")
+    @GetMapping("{id}/delete")
     public String deleteTask(@PathVariable Long id) {
         taskService.deleteTask(id);
         return "redirect:/";
