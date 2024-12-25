@@ -1,0 +1,94 @@
+openapi: 3.0.1
+info:
+  title: OpenAPI definition
+  version: v0
+servers:
+- url: http://localhost:8080
+  description: Generated server url
+tags:
+- name: task-controller
+  description: Controller class for handling tasks.
+paths:
+  /tasks:
+    post:
+      tags:
+      - task-controller
+      operationId: createTask
+      parameters:
+      - name: title
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: description
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: completed
+        in: query
+        required: true
+        schema:
+          type: boolean
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+  /{id}/toggle:
+    get:
+      tags:
+      - task-controller
+      operationId: toggleTasks
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+  /{id}/delete:
+    get:
+      tags:
+      - task-controller
+      operationId: deleteTask
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+  /:
+    get:
+      tags:
+      - task-controller
+      summary: Retrieves all tasks and adds them to the Model for rendering on the
+        view.
+      description: Retrieves all tasks and adds them to the Model for rendering on
+        the view.
+      operationId: getTasks
+      responses:
+        "200":
+          description: the view name for displaying the tasks
+          content:
+            '*/*':
+              schema:
+                type: string
+components: {}
