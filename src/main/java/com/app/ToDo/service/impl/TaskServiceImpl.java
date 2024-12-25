@@ -1,4 +1,4 @@
-package com.app.ToDo.service;
+package com.app.ToDo.service.impl;
 
 import com.app.ToDo.models.Task;
 import com.app.ToDo.repositories.TaskRepository;
@@ -7,11 +7,10 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class TaskService {
-
+public class TaskServiceImpl {
     private final TaskRepository taskRepository;
 
-    public TaskService(TaskRepository taskRepository) {
+    public TaskServiceImpl(TaskRepository taskRepository) {
         this.taskRepository = taskRepository;
     }
 
@@ -21,7 +20,7 @@ public class TaskService {
     }
 
 //    This method add new tasks!
-    public void createTask(String title, String description ) {
+    public void createTask(String title, String description, boolean completed ) {
         Task task = new Task();
         task.setTitle(title);
         task.setDescription(description);

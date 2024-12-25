@@ -5,26 +5,53 @@ import lombok.*;
 
 @Entity
 @Table(name = "Tasks")
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    public Long id;
-    public String title;
+    private Long id;
+    private String title;
 
     @Column(nullable = false)
-    public String description;
+    private String description;
 
-    public boolean completed;
+    private boolean completed;
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
+    public Task() {
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public boolean isCompleted() {
@@ -33,9 +60,5 @@ public class Task {
 
     public void setCompleted(boolean completed) {
         this.completed = completed;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
     }
 }
