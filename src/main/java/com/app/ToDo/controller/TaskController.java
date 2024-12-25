@@ -9,7 +9,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller
+/**
+ * test test
+ */
+@RestController
 public class TaskController {
 
     private final TaskServiceImpl taskServiceImpl;
