@@ -9,14 +9,19 @@ import java.util.List;
 public interface TaskService {
     //create
     TasksDto createTask(TasksDto tasksDto, String userId);
+
     //update
     TasksDto updateTask(TasksDto tasksDto, Long taskId);
+
     //delete
     void deleteTask(Long taskId);
+
     //get
     TasksDto getTask(Long taskId);
+
     //getAll
     List<TasksDto> getAllTasks();
+
     //getByUser
     List<TasksDto> getTasksByUser(String userId);
 }
