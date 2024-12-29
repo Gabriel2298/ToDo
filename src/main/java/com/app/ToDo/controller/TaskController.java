@@ -1,9 +1,13 @@
 package com.app.ToDo.controller;
 
-import com.app.ToDo.models.Task;
-import com.app.ToDo.service.impl.TaskServiceImpl;
-import org.jetbrains.annotations.NotNull;
-import org.springframework.ui.Model;
+import com.app.ToDo.dtos.ApiRes;
+import com.app.ToDo.dtos.TasksDto;
+import com.app.ToDo.service.TaskService;
+
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -11,63 +15,46 @@ import java.util.List;
 /**
  * Controller class for handling tasks.
  */
+
 @RestController
+@RequestMapping("/api/tasks")
+@CrossOrigin
 public class TaskController {
 
-    private final TaskServiceImpl taskServiceImpl;
+    @Autowired
+    private TaskService taskService;
 
-    public TaskController(TaskServiceImpl taskServiceImpl) {
-        this.taskServiceImpl = taskServiceImpl;
-    }
-
-    /**
-     * Retrieves all tasks and adds them to the Model for rendering on the view.
-     *
-     * @param model the Model object to which the tasks are added
-     * @return the view name for displaying the tasks
-     */
-    @GetMapping
-    public String getTasks(@NotNull Model model) {
-        List<Task> tasks = taskServiceImpl.getAllTasks();
-        model.addAttribute("tasks", tasks);
-        return "tasks";
-    }
-
-    /**
-     * Creates a new task with the given title, description, and completion status.
-     *
-     * @param title the title of the task
-     * @param description the description of the task
-     * @param completed true if the task is already completed, false otherwise
-     * @return a redirection to the home page "/"
-     */
     @PostMapping("/tasks")
-    public String createTask(String title, String description, boolean completed) {
-        taskServiceImpl.createTask(title,description, completed);
-        return "redirect:/";
+    public ResponseEntity<TasksDto> createTasks(@RequestBody TasksDto tasks, @PathVariable String userId) {
+        TasksDto task = this.taskService.createTask(tasks, userId);
+        return new ResponseEntity<TasksDto>(tasks, HttpStatus.CREATED);
     }
 
-    /**
-     * Deletes a task with the specified ID.
-     *
-     * @param id the ID of the task to be deleted
-     * @return a redirection to the home page "/"
-     */
+    @PutMapping("/{tasksId}")
+    public ResponseEntity<TasksDto> updateTasks(@RequestBody TasksDto tasks, @PathVariable Long tasksId) {
+        TasksDto updateTask = this.taskService.updateTask(tasks, tasksId);
+        return new ResponseEntity<TasksDto>(updateTask, HttpStatus.OK);
+    }
+
+
     @GetMapping("{id}/delete")
-    public String deleteTask(@PathVariable Long id) {
-        taskServiceImpl.deleteTask(id);
-        return "redirect:/";
+    public ResponseEntity<ApiRes> deleteTask(@PathVariable Long taskId) {
+        this.taskService.deleteTask(taskId);
+        return new ResponseEntity<ApiRes>(new ApiRes("Task deleted", true), HttpStatus.OK);
     }
 
-    /**
-     * Toggles the completion status of a task with the specified ID.
-     *
-     * @param id the ID of the task to toggle
-     * @return a redirection to the home page "/"
-     */
-    @GetMapping("/{id}/toggle")
-    public String toggleTasks(@PathVariable Long id) {
-        taskServiceImpl.toggleTask(id);
-        return "redirect:/";
+    @GetMapping("/{userId}")
+    public ResponseEntity<List<TasksDto>> getTasksByUser(@PathVariable String userId) {
+        List<TasksDto> Task = this.taskService.getTasksByUser(userId);
+        return new ResponseEntity<List<TasksDto>>(Task, HttpStatus.OK);
+    }
+
+    @GetMapping("/")
+    @CrossOrigin
+    public ResponseEntity<List<TasksDto>> getTasks(){
+        List<TasksDto> Task = this.taskService.getAllTasks();
+        return new ResponseEntity<List<TasksDto>>(Task, HttpStatus.OK);
     }
 }
+
+
