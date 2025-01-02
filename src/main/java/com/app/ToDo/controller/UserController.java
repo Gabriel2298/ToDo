@@ -56,10 +56,10 @@ public class UserController {
    }
 
    /**
-    * Retrieves the details of a user based on the provided user ID.
+    * Retrieves user details based on the provided user ID.
     *
-    * @param userId the ID of the user to retrieve
-    * @return a ResponseEntity containing the UserDto object representing the user's details
+    * @param userId the ID of the user to be retrieved
+    * @return a ResponseEntity containing the UserDto object with the user's details
     */
    //get
     @GetMapping("/{userId}")
@@ -69,9 +69,9 @@ public class UserController {
     }
 
     /**
-     * Retrieves a list of all users.
+     * Retrieves all users.
      *
-     * @return a ResponseEntity containing an iterable of UserDto objects representing all users
+     * @return a ResponseEntity containing an iterable collection of UserDto objects representing all users
      */
     //get all
     @GetMapping("/")
@@ -83,9 +83,9 @@ public class UserController {
     /**
      * Authenticates a user based on the provided login credentials.
      *
-     * @param loginBody the LoginBody object containing the user's email and password
+     * @param loginBody the LoginBody object containing the email and password for the user
      * @return a ResponseEntity containing the authenticated UserDto object if successful,
-     *         or an unauthorized response if authentication fails
+     *         or an unauthorized status if authentication fails
      */
     @PostMapping("/login")
     public ResponseEntity<UserDto> userLogin(@RequestBody LoginBody loginBody){
@@ -94,7 +94,7 @@ public class UserController {
             apiRes = this.userService.userLogin(loginBody.getEmail(), loginBody.getPassword());
             return ResponseEntity.ok(apiRes);
         } catch (Exception e) {
-            return new ResponseEntity<UserDto>(apiRes, HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(apiRes, HttpStatus.UNAUTHORIZED);
         }
     }
 }

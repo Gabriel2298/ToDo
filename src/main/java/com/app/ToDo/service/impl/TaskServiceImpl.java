@@ -9,8 +9,6 @@ import com.app.ToDo.repositories.UserRepository;
 import com.app.ToDo.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.client.ResourceAccessException;
 
 import java.util.Date;
@@ -35,9 +33,12 @@ public class TaskServiceImpl implements TaskService {
      * @return the created task details as a TasksDto object
      */
     //    This method add new tasks!
-    @GetMapping
+    @Override
     public TasksDto createTask(TasksDto tasksDto, String userId) {
         User user = userRepository.findByEmail(userId);
+        if (user == null) {
+            throw new ResourceAccessException("User not found with email: " + userId);
+        }
         tasksDto.setDate(new Date());
         Task task = DtoToTask(tasksDto);
         task.setUser(user);
@@ -53,7 +54,7 @@ public class TaskServiceImpl implements TaskService {
      * @return the updated task details as a TasksDto object
      */
     // This method can update the task!
-    @GetMapping
+    @Override
     public TasksDto updateTask(TasksDto tasksDto, Long taskId) {
         Task task = this.taskRepository.findById(taskId).orElseThrow(()->new ResourceAccessException("not found"));
         tasksDto.setDate(new Date());
@@ -72,7 +73,7 @@ public class TaskServiceImpl implements TaskService {
      * @param taskId the unique identifier of the task to be deleted
      */
     // This method can delete the task!
-    @DeleteMapping
+    @Override
     public void deleteTask(Long taskId) {
         Task task = this.taskRepository.findById(taskId).orElseThrow(()->new ResourceAccessException("not found"));
         this.taskRepository.delete(task);

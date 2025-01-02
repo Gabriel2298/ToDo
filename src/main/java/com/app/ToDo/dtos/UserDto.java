@@ -9,7 +9,7 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 
-@Data
+
 @ToString
 public class UserDto implements Serializable {
     private Long id;
