@@ -4,6 +4,7 @@ import com.app.ToDo.dtos.UserDto;
 import com.app.ToDo.models.User;
 import com.app.ToDo.repositories.UserRepository;
 import com.app.ToDo.service.UserService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -54,20 +55,21 @@ public class UserServiceImpl implements UserService {
         this.userRepository.delete(user);
     }
 
-    /**
-     * Retrieves a user's details by their unique identifier.
-     *
-     * @param userId the unique ID of the user to be retrieved
-     * @return the data transfer object representing the retrieved user
-     * @throws EntityNotFoundException if no user with the given ID is found
-     */
-    //get
     @Override
-    public UserDto getUser(Long userId) {
-        User user = this.userRepository.findById(userId).orElseThrow();
+    public UserDto getUser(String email) {
+        User user = this.userRepository.findByEmail(email);
+        if (user == null) {
+            throw new EntityNotFoundException("User with email:" + email +"not found");
+        }
         return this.UserToDto(user);
     }
 
+    // get
+    @Override
+    public UserDto getUser(Long userId) {
+        User user = this.userRepository.findById(userId).orElseThrow(()->new EntityNotFoundException("User with id:" + userId +"not found"));
+        return this.UserToDto(user) ;
+    }
     /**
      * Retrieves a list of all users in the system.
      *
@@ -76,8 +78,8 @@ public class UserServiceImpl implements UserService {
     //get all
     @Override
     public List<UserDto> getAllUsers() {
-        List<User> users= this.userRepository.findAll();
-        return List.of();
+        List<User> users = this.userRepository.findAll();
+        return users.stream().map(this::UserToDto).toList();
     }
 
     /**
@@ -92,6 +94,12 @@ public class UserServiceImpl implements UserService {
         return null;
     }
 
+    /**
+     * Converts a UserDto object to a User object by mapping the relevant fields.
+     *
+     * @param userDto the data transfer object containing user details to be converted
+     * @return the User object created from the given UserDto
+     */
     public User DtoToUser(UserDto userDto) {
         User user = new User();
         user.setName(userDto.getName());
@@ -107,10 +115,13 @@ public class UserServiceImpl implements UserService {
      * @return the converted UserDto object
      */
     public UserDto UserToDto(User user) {
+        if (user == null) {
+            throw new EntityNotFoundException("Cannot convert null user to UserDto.");
+        }
         UserDto userDto = new UserDto();
         userDto.setId(user.getId());
-        userDto.setName(userDto.getName());
-        userDto.setEmail(userDto.getEmail());
+        userDto.setName(user.getName());
+        userDto.setEmail(user.getEmail());
         userDto.setPassword(user.getPassword());
         return userDto;
     }
