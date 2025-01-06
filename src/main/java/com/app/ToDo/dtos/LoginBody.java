@@ -1,13 +1,9 @@
 package com.app.ToDo.dtos;
 
-import lombok.ToString;
-
-
 public class LoginBody {
-    public  String email;
+    private  String email;
 
-    @ToString.Exclude
-    public  String password;
+     private String password;
 
     public String getPassword() {
         return password;
