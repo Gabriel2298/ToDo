@@ -101,7 +101,8 @@ public class UserController {
     //get all
     @GetMapping(GET_ALL_USERS_ENDPOINT)
     public ResponseEntity<List<UserDto>> getAllUsers(){
-    var users = this.userService.getAllUsers();
+        List<UserDto> users = this.userService.getAllUsers();
+//    var users = this.userService.getAllUsers();
         System.out.println("Users: " + users.size());
         return ResponseEntity.ok(users);
     }
