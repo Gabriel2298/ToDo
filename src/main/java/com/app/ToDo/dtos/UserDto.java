@@ -2,15 +2,12 @@ package com.app.ToDo.dtos;
 
 import com.app.ToDo.models.Task;
 
-import lombok.Data;
-import lombok.ToString;
-
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 
 
-@ToString
+
 public class UserDto implements Serializable {
     private Long id;
     private String name;

@@ -12,7 +12,10 @@ public interface UserService{
     UserDto updateUser(UserDto userDto, Long userId);
     // delete users
     void deletedUser(Long userId);
-    // get users
+    // get by email users
+    UserDto getUser(String email);
+
+    //get
     UserDto getUser(Long userId);
     //get all users
     List<UserDto> getAllUsers();

@@ -5,15 +5,17 @@ import com.app.ToDo.models.User;
 import com.app.ToDo.repositories.UserRepository;
 import com.app.ToDo.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService {
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+
+    public UserServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     /**
      * Creates a new user in the system by saving the provided user details.
@@ -73,12 +75,15 @@ public class UserServiceImpl implements UserService {
     /**
      * Retrieves a list of all users in the system.
      *
-     * @return a list of data transfer objects representing all users
+     * @return a list of UserDto objects representing all users
      */
     //get all
     @Override
     public List<UserDto> getAllUsers() {
         List<User> users = this.userRepository.findAll();
+        if (users.isEmpty()) {
+            throw new EntityNotFoundException("No users found in the system.");
+        }
         return users.stream().map(this::UserToDto).toList();
     }
 
@@ -105,6 +110,8 @@ public class UserServiceImpl implements UserService {
         user.setName(userDto.getName());
         user.setEmail(userDto.getEmail());
         user.setPassword(userDto.getPassword());
+        user.setUserName(userDto.getUserName());
+        user.setActive(true);
         return user;
     }
 
@@ -123,6 +130,10 @@ public class UserServiceImpl implements UserService {
         userDto.setName(user.getName());
         userDto.setEmail(user.getEmail());
         userDto.setPassword(user.getPassword());
+        userDto.setUserName(user.getUserName());
+        userDto.setActive(false);
+        userDto.setAge(user.getAge());
+        userDto.setRegistrationDate(user.getRegistrationDate());
         return userDto;
     }
 }

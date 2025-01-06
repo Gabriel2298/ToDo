@@ -5,7 +5,6 @@ import com.app.ToDo.dtos.TasksDto;
 import com.app.ToDo.service.TaskService;
 
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,28 +12,33 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
- * Controller class for handling tasks.
+ * Controller class for managing tasks through various CRUD operations.
+ * This class provides endpoints to create, update, delete,
+ * and retrieve tasks associated with users.
  */
 
 @RestController
-@RequestMapping("/api/tasks")
+@RequestMapping("/api")
 @CrossOrigin
 public class TaskController {
 
-    @Autowired
-    private TaskService taskService;
+    private final TaskService taskService;
+
+    public TaskController(TaskService taskService) {
+        this.taskService = taskService;
+    }
 
     /**
-     * Creates a new task for a specific user.
+     * Creates a new task for the specified user.
      *
-     * @param tasks the TasksDto object containing the details of the task to be created
-     * @param userId the ID of the user for whom the task is created
-     * @return a ResponseEntity containing the created TasksDto object and HTTP status code
+     * @param tasks the TasksDto object containing details of the task to be created
+     * @param userIdentifier the identifier of the user for whom the task is being created
+     * @return a ResponseEntity containing the created TasksDto object and an HTTP status code
      */
     @PostMapping("/tasks")
-    public ResponseEntity<TasksDto> createTasks(@RequestBody TasksDto tasks, @PathVariable String userId) {
-        TasksDto task = this.taskService.createTask(tasks, userId);
-        return new ResponseEntity<TasksDto>(tasks, HttpStatus.CREATED);
+    public ResponseEntity<TasksDto> createTasks(@RequestBody TasksDto tasks, String userIdentifier) {
+        TasksDto createTasks = this.taskService.createTask(tasks, userIdentifier);
+        return new ResponseEntity<>(createTasks, HttpStatus.CREATED);
     }
 
     /**
@@ -47,20 +51,20 @@ public class TaskController {
     @PutMapping("/{tasksId}")
     public ResponseEntity<TasksDto> updateTasks(@RequestBody TasksDto tasks, @PathVariable Long tasksId) {
         TasksDto updateTask = this.taskService.updateTask(tasks, tasksId);
-        return new ResponseEntity<TasksDto>(updateTask, HttpStatus.OK);
+        return new ResponseEntity<>(updateTask, HttpStatus.OK);
     }
 
 
     /**
      * Deletes a task based on the provided task ID.
      *
-     * @param taskId the ID of the task to be deleted
+     * @param  id ID of the task to be deleted
      * @return a ResponseEntity containing an ApiRes object with a success message and HTTP status code
      */
     @GetMapping("{id}/delete")
-    public ResponseEntity<ApiRes> deleteTask(@PathVariable Long taskId) {
-        this.taskService.deleteTask(taskId);
-        return new ResponseEntity<ApiRes>(new ApiRes("Task deleted", true), HttpStatus.OK);
+    public ResponseEntity<ApiRes> deleteTask(@PathVariable Long id) {
+        this.taskService.deleteTask(id);
+        return new ResponseEntity<>(new ApiRes("Task deleted", true), HttpStatus.OK);
     }
 
     /**
@@ -72,7 +76,7 @@ public class TaskController {
     @GetMapping("/{userId}")
     public ResponseEntity<List<TasksDto>> getTasksByUser(@PathVariable String userId) {
         List<TasksDto> Task = this.taskService.getTasksByUser(userId);
-        return new ResponseEntity<List<TasksDto>>(Task, HttpStatus.OK);
+        return new ResponseEntity<>(Task, HttpStatus.OK);
     }
 
     /**
@@ -84,7 +88,7 @@ public class TaskController {
     @CrossOrigin
     public ResponseEntity<List<TasksDto>> getTasks(){
         List<TasksDto> Task = this.taskService.getAllTasks();
-        return new ResponseEntity<List<TasksDto>>(Task, HttpStatus.OK);
+        return new ResponseEntity<>(Task, HttpStatus.OK);
     }
 }
 

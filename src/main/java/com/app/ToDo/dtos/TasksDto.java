@@ -1,35 +1,33 @@
 package com.app.ToDo.dtos;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.*;
-
-import java.util.Date;
+import java.time.LocalDate;
 
 
-@AllArgsConstructor
-@NoArgsConstructor
+
+
 public class TasksDto {
     private Long id;
-    private String Title;
-    private String Description;
+    private String title;
+    private String description;
 
     @JsonFormat(pattern = "yyyy-MM-dd")
-    private Date date;
+    private LocalDate date;
 
     public String getDescription() {
-        return Description;
+        return description;
     }
 
     public void setDescription(String description) {
-        Description = description;
+        this.description = description;
     }
 
     public String getTitle() {
-        return Title;
+        return title;
     }
 
     public void setTitle(String title) {
-        Title = title;
+        this.title = title;
     }
 
     public Long getId() {
@@ -40,20 +38,20 @@ public class TasksDto {
         this.id = id;
     }
 
-    public Date getDate() {
-        return date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
-    }
-
     public UserDto getUserDto() {
         return userDto;
     }
 
     public void setUserDto(UserDto userDto) {
         this.userDto = userDto;
+    }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
     }
 
     private UserDto userDto;

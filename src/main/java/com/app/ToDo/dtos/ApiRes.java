@@ -1,18 +1,20 @@
 package com.app.ToDo.dtos;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
 
-@Getter
-@Setter
-@ToString
 public class ApiRes {
-    private String message;
-    private Boolean success;
+    private final String message;
+    private final boolean success;
 
-    public ApiRes(String message, Boolean success) {
+    public ApiRes(String message, boolean success) {
         this.message = message;
         this.success = success;
+    }
+
+    @Override
+    public String toString() {
+        return "ApiRes{" +
+                "message='" + message + '\'' +
+                ", success=" + success +
+                '}';
     }
 }

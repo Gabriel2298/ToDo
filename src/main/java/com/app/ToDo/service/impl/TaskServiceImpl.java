@@ -7,11 +7,12 @@ import com.app.ToDo.models.User;
 import com.app.ToDo.repositories.TaskRepository;
 import com.app.ToDo.repositories.UserRepository;
 import com.app.ToDo.service.TaskService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.ResourceAccessException;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,7 +40,7 @@ public class TaskServiceImpl implements TaskService {
         if (user == null) {
             throw new ResourceAccessException("User not found with email: " + userId);
         }
-        tasksDto.setDate(new Date());
+        tasksDto.setDate(LocalDate.now());
         Task task = DtoToTask(tasksDto);
         task.setUser(user);
         Task result = taskRepository.save(task);
@@ -57,9 +58,8 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public TasksDto updateTask(TasksDto tasksDto, Long taskId) {
         Task task = this.taskRepository.findById(taskId).orElseThrow(()->new ResourceAccessException("not found"));
-        tasksDto.setDate(new Date());
+        tasksDto.setDate((LocalDate.now()));
         task.setTitle(tasksDto.getTitle());
-        task.setDate(tasksDto.getDate());
         task.setDescription(tasksDto.getDescription());
         Task result = this.taskRepository.save(task);
         return this.TasksToDto(result);
@@ -75,7 +75,7 @@ public class TaskServiceImpl implements TaskService {
     // This method can delete the task!
     @Override
     public void deleteTask(Long taskId) {
-        Task task = this.taskRepository.findById(taskId).orElseThrow(()->new ResourceAccessException("not found"));
+        Task task = this.taskRepository.findById(taskId).orElseThrow(()->new EntityNotFoundException("not found"));
         this.taskRepository.delete(task);
     }
 
@@ -147,7 +147,6 @@ public class TaskServiceImpl implements TaskService {
     public Task DtoToTask(TasksDto tasksDto){
         Task task = new Task();
         task.setTitle(tasksDto.getTitle());
-        task.setDate(tasksDto.getDate());
         task.setDescription(tasksDto.getDescription());
         return task;
     }
