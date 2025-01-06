@@ -14,7 +14,7 @@ public class DatabaseConfig {
     public DataSource dataSource(){
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName("org.postgresql.Driver");
-        dataSource.setUrl("jdbc:postgresql://localhost:5432/ToDoAPP");
+        dataSource.setUrl("jdbc:postgresql://localhost:5432/ToDo");
         dataSource.setUsername("postgres");
         dataSource.setPassword("postgres");
         return dataSource;
