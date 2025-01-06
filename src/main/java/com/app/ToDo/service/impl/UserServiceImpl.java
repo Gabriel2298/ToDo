@@ -112,6 +112,8 @@ public class UserServiceImpl implements UserService {
         user.setPassword(userDto.getPassword());
         user.setUserName(userDto.getUserName());
         user.setActive(true);
+        user.setAge(userDto.getAge());
+        user.setRegistrationDate(userDto.getRegistrationDate());
         return user;
     }
 
@@ -131,7 +133,7 @@ public class UserServiceImpl implements UserService {
         userDto.setEmail(user.getEmail());
         userDto.setPassword(user.getPassword());
         userDto.setUserName(user.getUserName());
-        userDto.setActive(false);
+        userDto.setActive(true);
         userDto.setAge(user.getAge());
         userDto.setRegistrationDate(user.getRegistrationDate());
         return userDto;
