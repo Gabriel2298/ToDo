@@ -1,13 +1,13 @@
 package com.app.ToDo.dtos;
 
 
-public class ApiRes {
-    private final String message;
-    private final boolean success;
+public record ApiRes(String message, boolean success) {
+    public String setMessage(String message) {
+        return this.message;
+    }
 
-    public ApiRes(String message, boolean success) {
-        this.message = message;
-        this.success = success;
+    public boolean setSuccess(boolean success) {
+        return this.success;
     }
 
     @Override
