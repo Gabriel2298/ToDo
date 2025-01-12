@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
-
 @Entity
 @Table(name = Task.TABLE_NAME) // Ensure the "tasks" table exists in the database schema with the correct name
 public class Task {
@@ -19,12 +18,15 @@ public class Task {
     private String description;
 
     @JsonFormat(pattern = "yyyy-MM-dd")
-    private LocalDate LocalDate;
+    private LocalDate date;
+
+    @ManyToOne(fetch = FetchType.LAZY,optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     public Task() {
 
     }
-
     public String getTitle() {
         return title;
     }
@@ -58,11 +60,6 @@ public class Task {
     }
 
     public LocalDate getDate() {
-        return LocalDate;
+        return date;
     }
-
-
-    @ManyToOne
-    private User user;
-
 }
