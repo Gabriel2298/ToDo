@@ -8,13 +8,14 @@ import java.util.List;
 @Service
 public interface TaskService {
     //create
-    TasksDto createTask(TasksDto tasksDto, String userId);
+    TasksDto createTask(TasksDto tasksDto, String email);
 
     //update
     TasksDto updateTask(TasksDto tasksDto, Long taskId);
 
     //delete
-    void deleteTask(Long taskId);
+    void deleteTask(Long taskId,String email);
+
 
     //get
     TasksDto getTask(Long taskId);
@@ -23,5 +24,6 @@ public interface TaskService {
     List<TasksDto> getAllTasks();
 
     //getByUser
-    List<TasksDto> getTasksByUser(String userId);
+    List<TasksDto> getTasksByUserEmail(String email);
+
 }

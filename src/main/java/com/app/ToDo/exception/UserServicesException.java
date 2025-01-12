@@ -2,7 +2,7 @@ package com.app.ToDo.exception;
 
 
 public class UserServicesException extends RuntimeException {
-    private String errorCode;
+    private final String errorCode;
 
     public UserServicesException(String message, String errorCode){
         super(message);

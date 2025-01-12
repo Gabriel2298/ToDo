@@ -23,6 +23,10 @@ public class UserDto implements Serializable {
         return id;
     }
 
+    public boolean isActive() {
+        return active;
+    }
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -73,10 +77,6 @@ public class UserDto implements Serializable {
 
     public void setUserName(String userName) {
         this.userName = userName;
-    }
-
-    public boolean isActive() {
-        return active;
     }
 
     public void setActive(boolean active) {

@@ -3,7 +3,6 @@ package com.app.ToDo.models;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -15,10 +14,10 @@ public class User  {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
+    private String userName;
     @Column(unique = true)
     private String email;
     private String password;
-    private boolean active;
     private Integer age;
     private LocalDate registrationDate;
 
@@ -36,24 +35,6 @@ public class User  {
 
     public void setRegistrationDate(LocalDate registrationDate) {
         this.registrationDate = registrationDate;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    private String userName;
-
-    public boolean isActive() {
-        return active;
-    }
-
-    public void setActive(boolean active) {
-        this.active = active;
     }
 
     public Long getId() {
@@ -96,8 +77,15 @@ public class User  {
         this.tasks = tasks;
     }
 
+    public String getUserName() {
+        return userName;
+    }
 
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<Task> tasks = new ArrayList<>();
+    private List<Task> tasks;
+
 }

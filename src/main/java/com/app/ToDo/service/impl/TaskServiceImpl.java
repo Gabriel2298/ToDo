@@ -8,9 +8,10 @@ import com.app.ToDo.repositories.TaskRepository;
 import com.app.ToDo.repositories.UserRepository;
 import com.app.ToDo.service.TaskService;
 import jakarta.persistence.EntityNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.client.ResourceAccessException;
+
 
 import java.time.LocalDate;
 import java.util.List;
@@ -19,26 +20,33 @@ import java.util.stream.Collectors;
 
 @Service
 public class TaskServiceImpl implements TaskService {
-    @Autowired
-    private TaskRepository taskRepository;
+    private final TaskRepository taskRepository;
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+
+    public TaskServiceImpl(TaskRepository taskRepository, UserRepository userRepository) {
+        this.taskRepository = taskRepository;
+        this.userRepository = userRepository;
+    }
 
     /**
      * Creates a new task and associates it with the user identified by the provided user ID.
      * Persists the task to the database and returns the created task as a TasksDto.
      *
      * @param tasksDto the task details to be created, including title, description, and date
-     * @param userId the identifier (email) of the user who owns the task
+     * @param email the identifier (email) of the user who owns the task
      * @return the created task details as a TasksDto object
      */
     //    This method add new tasks!
     @Override
-    public TasksDto createTask(TasksDto tasksDto, String userId) {
-        User user = userRepository.findByEmail(userId);
-        if (user == null) {
-            throw new ResourceAccessException("User not found with email: " + userId);
+    public TasksDto createTask(TasksDto tasksDto, String email) {
+        if(email==null||email.isEmpty()){
+            throw new IllegalArgumentException("Email must not be null or empty!");
+        }
+
+        User user = userRepository.findByEmail(email);
+        if (user==null) {
+            throw new ResourceAccessException("User not found with email: " + email);
         }
         tasksDto.setDate(LocalDate.now());
         Task task = DtoToTask(tasksDto);
@@ -64,18 +72,17 @@ public class TaskServiceImpl implements TaskService {
         Task result = this.taskRepository.save(task);
         return this.TasksToDto(result);
     }
-
     /**
      * Deletes an existing task by its unique identifier.
      * The task is retrieved from the repository and removed.
      * If the task does not exist, a ResourceAccessException is thrown.
      *
-     * @param taskId the unique identifier of the task to be deleted
+     * @param id the unique identifier of the task to be deleted
      */
     // This method can delete the task!
     @Override
-    public void deleteTask(Long taskId) {
-        Task task = this.taskRepository.findById(taskId).orElseThrow(()->new EntityNotFoundException("not found"));
+    public void deleteTask(Long id, String email) {
+        Task task = this.taskRepository.findById(id).orElseThrow(()->new EntityNotFoundException("not found"));
         this.taskRepository.delete(task);
     }
 
@@ -96,20 +103,18 @@ public class TaskServiceImpl implements TaskService {
     /**
      * Retrieves a list of tasks associated with a specific user.
      *
-     * @param userId the email or identifier of the user whose tasks are to be retrieved
+     * @param email the email or identifier of the user whose tasks are to be retrieved
      * @return a list of task data transfer objects (TasksDto) associated with the specified user
      */
     // This method get task by  user!
     @Override
-    public List<TasksDto> getTasksByUser(String userId){
-       User user = userRepository.findByEmail(userId);
+    public List<TasksDto> getTasksByUserEmail(@PathVariable String email){
+       User user = userRepository.findByEmail(email);
        List<Task> tasks = this.taskRepository.findAllByUser(user);
-       List<TasksDto> allTasks = tasks.stream().map(this::TasksToDto).collect(Collectors.toList());
-       return allTasks;
+        return tasks.stream().map(this::TasksToDto).collect(Collectors.toList());
 
 
     }
-
     /**
      * Retrieves all tasks from the repository and converts them to DTOs.
      *
@@ -119,8 +124,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public List<TasksDto> getAllTasks(){
         List<Task> tasks = this.taskRepository.findAll();
-        List<TasksDto> allTasks = tasks.stream().map((task)->this.TasksToDto(task)).collect(Collectors.toList());
-        return allTasks;
+        return tasks.stream().map(this::TasksToDto).collect(Collectors.toList());
     }
 
     /**
@@ -133,9 +137,8 @@ public class TaskServiceImpl implements TaskService {
         TasksDto tasksDto = new TasksDto();
         tasksDto.setId(task.getId());
         tasksDto.setTitle(task.getTitle());
-        tasksDto.setDate(task.getDate());
+        tasksDto.setDate(tasksDto.getDate());
         tasksDto.setDescription(task.getDescription());
-        tasksDto.setUserDto(this.UserToDto(task.getUser()));
         return tasksDto;
     }
     /**
